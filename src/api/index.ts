@@ -16,7 +16,7 @@ export const getRequest = async <T>(arg: getRequestType<T>) => {
     })
     .then((res) => {
       console.log(res.data)
-      const data = res.data
+      const data = res.data as T
       arg.callback && arg.callback(data)
     })
     .catch((err) => {
