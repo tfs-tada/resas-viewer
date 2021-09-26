@@ -60,7 +60,7 @@ const LineChartBox: FC<LineChartBoxProps> = ({ data = [], xLabel, yLabel }) => {
     )
   } else
     return (
-      <div className={styles.error_wrapper}>
+      <div className={styles.error_wrapper} data-e2e={'linechart-error-area'}>
         <div>データエラー</div>
         <div>データの取得に失敗しました。グラフを描画できません</div>
       </div>
