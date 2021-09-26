@@ -9,11 +9,12 @@ import {
   ResponsiveContainer,
 } from 'recharts'
 import { lineChartDataType } from '../../../interfaces/graphPropsType'
+import styles from './index.module.scss'
 
 // ex: { x: 2000, 鳥取: 400, 島根: 240 },
 interface LineChartBoxProps extends lineChartDataType {}
-const LineChartBox: FC<LineChartBoxProps> = ({ data }) => {
-  if (Array.isArray(data)) {
+const LineChartBox: FC<LineChartBoxProps> = ({ data = [] }) => {
+  if (Array.isArray(data) && data.length !== 0) {
     return (
       <ResponsiveContainer>
         <LineChart data={data}>
@@ -29,6 +30,12 @@ const LineChartBox: FC<LineChartBoxProps> = ({ data }) => {
         </LineChart>
       </ResponsiveContainer>
     )
-  } else return <div>データエラー</div>
+  } else
+    return (
+      <div className={styles.error_wrapper}>
+        <div>データエラー</div>
+        <div>データの取得に失敗しました。グラフを描画できません</div>
+      </div>
+    )
 }
 export default LineChartBox

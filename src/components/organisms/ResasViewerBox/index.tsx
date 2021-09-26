@@ -41,6 +41,9 @@ const reshapeDataFor = (
 const ResasViewerBox: FC = () => {
   const [resasData, setResasData] = useState<prefecturesSingleDataType[]>([])
   const [prefCodeList, setPrefCodeList] = useState<number[]>([])
+  const [lineChartFormatData, setLineChartFormatData] = useState<
+    lineChartSingleType[]
+  >([])
   const { data, loading } = usePopulationCompositionList(prefCodeList)
   useEffect(() => {
     getRequest<prefecturesApiType>({
@@ -48,6 +51,9 @@ const ResasViewerBox: FC = () => {
       callback: (data) => setResasData(data.result),
     })
   }, [])
+  useEffect(() => {
+    setLineChartFormatData(reshapeDataFor(data, resasData))
+  }, [data, resasData])
 
   // チェックリストが押された時のデータ更新
   const fixPrefCodeList = (prefCode: number) => {
@@ -70,9 +76,15 @@ const ResasViewerBox: FC = () => {
           </div>
         ))}
       </div>
-      <div className={styles.graphbox_wrapper}>
-        <LineChartBox data={reshapeDataFor(data, resasData)} />
-      </div>
+      {prefCodeList.length === 0 || loading ? (
+        <div className={styles.checkcomment_wrapper}>
+          表示したい都道府県を選択してください
+        </div>
+      ) : (
+        <div className={styles.graphbox_wrapper}>
+          <LineChartBox data={lineChartFormatData} />
+        </div>
+      )}
     </div>
   )
 }
