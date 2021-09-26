@@ -7,26 +7,53 @@ import {
   YAxis,
   Tooltip,
   ResponsiveContainer,
+  Legend,
+  Label,
 } from 'recharts'
 import { lineChartDataType } from '../../../interfaces/graphPropsType'
 import styles from './index.module.scss'
 
+const colorListRandom = [...Array(100)].map(
+  (_) =>
+    `rgb(${~~(256 * Math.random())},${~~(256 * Math.random())},${~~(
+      256 * Math.random()
+    )})`
+)
+
 // ex: { x: 2000, 鳥取: 400, 島根: 240 },
-interface LineChartBoxProps extends lineChartDataType {}
-const LineChartBox: FC<LineChartBoxProps> = ({ data = [] }) => {
+interface LineChartBoxProps extends lineChartDataType {
+  xLabel: string
+  yLabel: string
+}
+const LineChartBox: FC<LineChartBoxProps> = ({ data = [], xLabel, yLabel }) => {
   if (Array.isArray(data) && data.length !== 0) {
     return (
       <ResponsiveContainer>
-        <LineChart data={data}>
+        <LineChart
+          data={data}
+          margin={{ left: 20, right: 20, bottom: 20, top: 20 }}
+        >
           {Object.keys(data[0])
             .filter((e) => e !== 'x')
-            .map((e) => (
-              <Line key={e} type='linear' dataKey={e} stroke='#8884d8' />
+            .map((e, idx) => (
+              <Line
+                key={e}
+                type='linear'
+                dataKey={e}
+                stroke={colorListRandom[idx % 100]}
+              />
             ))}
           <CartesianGrid stroke='#ccc' strokeDasharray='5 5' />
-          <XAxis dataKey='x' />
-          <YAxis />
+          <XAxis dataKey='x'>
+            <Label position={'bottom'}>{xLabel}</Label>
+          </XAxis>
+          <YAxis>
+            <Label position={'left'} angle={-90}>
+              {yLabel}
+            </Label>
+          </YAxis>
           <Tooltip />
+          <Legend verticalAlign='top' align='right' layout='vertical' />
         </LineChart>
       </ResponsiveContainer>
     )

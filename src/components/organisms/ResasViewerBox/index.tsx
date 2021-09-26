@@ -11,6 +11,9 @@ import LineChartBox from '../../molecules/LineChartBox'
 import { populationCompositionApiType } from '../../../interfaces/apiEndpointType'
 import { lineChartSingleType } from '../../../interfaces/graphPropsType'
 
+// 2020年までのデータを表示
+const Annuallimit = 2020
+
 // LineChartで読めるように整形
 const reshapeDataFor = (
   data: { prefCode: number; data: populationCompositionApiType }[],
@@ -23,6 +26,7 @@ const reshapeDataFor = (
     )
     totalPopulationList.map((yearsData) => {
       yearsData.data.forEach((singleYearData) => {
+        if (singleYearData.year > Annuallimit) return
         if (!tempObject[singleYearData.year])
           tempObject[singleYearData.year] = {
             x: singleYearData.year,
@@ -82,7 +86,11 @@ const ResasViewerBox: FC = () => {
         </div>
       ) : (
         <div className={styles.graphbox_wrapper}>
-          <LineChartBox data={lineChartFormatData} />
+          <LineChartBox
+            data={lineChartFormatData}
+            xLabel={'年度'}
+            yLabel={'人口数'}
+          />
         </div>
       )}
     </div>
