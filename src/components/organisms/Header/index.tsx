@@ -9,7 +9,7 @@ const Header: FC = () => {
         <meta name='description' content='resas 見られる ぺージ' />
         <link rel='icon' href='/favicon.ico' />
       </Head>
-      <div>
+      <div data-e2e='header-area'>
         <h1>title</h1>
       </div>
     </div>

@@ -41,6 +41,7 @@ const LineChartBox: FC<LineChartBoxProps> = ({ data = [], xLabel, yLabel }) => {
                 type='linear'
                 dataKey={e}
                 stroke={colorListRandom[idx % 100]}
+                isAnimationActive={false}
               />
             ))}
           <CartesianGrid stroke='#ccc' strokeDasharray='5 5' />

@@ -69,7 +69,7 @@ const ResasViewerBox: FC = () => {
 
   return (
     <div className={styles.contents_wrapper}>
-      <div className={styles.checkarea_wrapper}>
+      <div className={styles.checkarea_wrapper} data-e2e='checkbox-area'>
         {resasData.map((e) => (
           <div key={e.prefCode}>
             <CheckArea
@@ -81,11 +81,11 @@ const ResasViewerBox: FC = () => {
         ))}
       </div>
       {prefCodeList.length === 0 || loading ? (
-        <div className={styles.checkcomment_wrapper}>
+        <div className={styles.checkcomment_wrapper} data-e2e='nodata-area'>
           表示したい都道府県を選択してください
         </div>
       ) : (
-        <div className={styles.graphbox_wrapper}>
+        <div className={styles.graphbox_wrapper} data-e2e='graph-area'>
           <LineChartBox
             data={lineChartFormatData}
             xLabel={'年度'}

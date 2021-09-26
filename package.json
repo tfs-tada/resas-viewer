@@ -8,6 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run",
     "format": "prettier --ignore-path .gitignore --write ./**/*.{js,jsx,ts,tsx,json,css,scss} ",
     "deploy": "next build && next export"
   },
