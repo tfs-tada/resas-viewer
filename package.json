@@ -8,8 +8,12 @@
     "start": "next start",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run",
+    "e2e:front": "cp .env.test.example .env && next build && next start",
+    "e2e:back": "cd cypress && docker-compose up -d && cd .. && cypress run",
     "format": "prettier --ignore-path .gitignore --write ./**/*.{js,jsx,ts,tsx,json,css,scss} ",
-    "deploy": "next build && next export"
+    "deploy": "cp .env.example .env && next build && next export"
   },
   "dependencies": {
     "axios": "^0.21.4",
@@ -21,6 +25,7 @@
   "devDependencies": {
     "@types/react": "17.0.24",
     "@types/recharts": "^1.8.20",
+    "cypress": "^8.4.1",
     "eslint": "^7.32.0",
     "eslint-config-next": "^11.1.2",
     "eslint-config-prettier": "^8.3.0",

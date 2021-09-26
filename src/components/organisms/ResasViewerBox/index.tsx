@@ -1,15 +1,12 @@
 import { FC, useEffect, useState } from 'react'
-import { getRequest } from '../../../api'
 import styles from './index.module.scss'
-import {
-  prefecturesApiType,
-  prefecturesSingleDataType,
-} from '../../../interfaces/apiEndpointType'
+import { prefecturesSingleDataType } from '../../../interfaces/apiEndpointType'
 import CheckArea from '../../molecules/CheckArea'
 import usePopulationCompositionList from '../../../api/ApiHooks/PopulationCompositionList'
 import LineChartBox from '../../molecules/LineChartBox'
 import { populationCompositionApiType } from '../../../interfaces/apiEndpointType'
 import { lineChartSingleType } from '../../../interfaces/graphPropsType'
+import usePrefecturesList from '../../../api/ApiHooks/PrefecturesList'
 
 // 2020年までのデータを表示
 const Annuallimit = 2020
@@ -43,21 +40,16 @@ const reshapeDataFor = (
 }
 
 const ResasViewerBox: FC = () => {
-  const [resasData, setResasData] = useState<prefecturesSingleDataType[]>([])
   const [prefCodeList, setPrefCodeList] = useState<number[]>([])
   const [lineChartFormatData, setLineChartFormatData] = useState<
     lineChartSingleType[]
   >([])
-  const { data, loading } = usePopulationCompositionList(prefCodeList)
+  const { resasData, resasDataError } = usePrefecturesList()
+  const { compositionData, loading } =
+    usePopulationCompositionList(prefCodeList)
   useEffect(() => {
-    getRequest<prefecturesApiType>({
-      endpointUrl: '/api/v1/prefectures',
-      callback: (data) => setResasData(data.result),
-    })
-  }, [])
-  useEffect(() => {
-    setLineChartFormatData(reshapeDataFor(data, resasData))
-  }, [data, resasData])
+    setLineChartFormatData(reshapeDataFor(compositionData, resasData))
+  }, [compositionData, resasData])
 
   // チェックリストが押された時のデータ更新
   const fixPrefCodeList = (prefCode: number) => {
@@ -67,33 +59,44 @@ const ResasViewerBox: FC = () => {
     setPrefCodeList(newList)
   }
 
-  return (
-    <div className={styles.contents_wrapper}>
-      <div className={styles.checkarea_wrapper}>
-        {resasData.map((e) => (
-          <div key={e.prefCode}>
-            <CheckArea
-              isChecked={prefCodeList.includes(e.prefCode)}
-              labelText={e.prefName}
-              onChange={() => fixPrefCodeList(e.prefCode)}
+  // 県一覧取得に失敗したときのエラー表示
+  if (resasDataError) {
+    return (
+      <div className={styles.contents_wrapper}>
+        <div className={styles.checkcomment_wrapper} data-e2e='firsterror-area'>
+          データの取得に失敗しました
+        </div>
+      </div>
+    )
+  } else {
+    return (
+      <div className={styles.contents_wrapper}>
+        <div className={styles.checkarea_wrapper} data-e2e='checkbox-area'>
+          {resasData.map((e) => (
+            <div key={e.prefCode}>
+              <CheckArea
+                isChecked={prefCodeList.includes(e.prefCode)}
+                labelText={e.prefName}
+                onChange={() => fixPrefCodeList(e.prefCode)}
+              />
+            </div>
+          ))}
+        </div>
+        {prefCodeList.length === 0 || loading ? (
+          <div className={styles.checkcomment_wrapper} data-e2e='nodata-area'>
+            表示したい都道府県を選択してください
+          </div>
+        ) : (
+          <div className={styles.graphbox_wrapper} data-e2e='graph-area'>
+            <LineChartBox
+              data={lineChartFormatData}
+              xLabel={'年度'}
+              yLabel={'人口数'}
             />
           </div>
-        ))}
+        )}
       </div>
-      {prefCodeList.length === 0 || loading ? (
-        <div className={styles.checkcomment_wrapper}>
-          表示したい都道府県を選択してください
-        </div>
-      ) : (
-        <div className={styles.graphbox_wrapper}>
-          <LineChartBox
-            data={lineChartFormatData}
-            xLabel={'年度'}
-            yLabel={'人口数'}
-          />
-        </div>
-      )}
-    </div>
-  )
+    )
+  }
 }
 export default ResasViewerBox

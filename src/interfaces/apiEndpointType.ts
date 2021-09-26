@@ -14,16 +14,18 @@ export interface populationCompositionParamType {
   prefCode: number
 }
 
+export interface populationCompositionSingleType {
+  boundaryYear: number
+  data: {
+    label: populationCompositionApiLabel
+    data: {
+      year: number
+      value: number
+    }[]
+  }[]
+}
+
 export interface populationCompositionApiType {
   message: null
-  result: {
-    boundaryYear: number
-    data: {
-      label: populationCompositionApiLabel
-      data: {
-        year: number
-        value: number
-      }[]
-    }[]
-  }
+  result: populationCompositionSingleType
 }

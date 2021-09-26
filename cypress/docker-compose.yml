@@ -1,0 +1,11 @@
+version: '3'
+services:
+  resas_mock_api:
+    build: .
+    container_name: resas_mock_api
+    ports:
+      - 8080:8080
+    volumes:
+      - .:/home/api/
+    tty: true
+    command: /bin/bash -c "cd api; uvicorn app:app --host 0.0.0.0 --port 8080"
