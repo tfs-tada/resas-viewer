@@ -5,11 +5,20 @@ import {
   populationCompositionApiType,
 } from '../../../interfaces/apiEndpointType'
 
+const checkType = (data: populationCompositionApiType) =>
+  typeof data.result.boundaryYear === 'number' &&
+  Array.isArray(data.result.data) &&
+  typeof data.result.data[0].label === 'string' &&
+  Array.isArray(data.result.data[0].data) &&
+  typeof data.result.data[0].data[0].value === 'number' &&
+  typeof data.result.data[0].data[0].year === 'number'
+
 const usePopulationCompositionList = (prefCodes: number[]) => {
   const [compositionData, setCompositionData] = useState<
     { prefCode: number; data: populationCompositionApiType }[]
   >([])
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(false)
   useEffect(() => {
     if (prefCodes.length > 0 && compositionData.length < prefCodes.length) {
       setLoading(true)
@@ -20,10 +29,12 @@ const usePopulationCompositionList = (prefCodes: number[]) => {
         endpointUrl: '/api/v1/population/composition/perYear',
         params: params,
         callback: (data) => {
-          setCompositionData([
-            ...compositionData,
-            { prefCode: params.prefCode, data: data },
-          ])
+          if (checkType(data)) {
+            setCompositionData([
+              ...compositionData,
+              { prefCode: params.prefCode, data: data },
+            ])
+          } else setError(true)
           setLoading(false)
         },
       })
@@ -33,8 +44,9 @@ const usePopulationCompositionList = (prefCodes: number[]) => {
       ])
   }, [prefCodes])
   return {
-    data: compositionData,
+    compositionData: compositionData,
     loading: compositionData.length === 0 && loading,
+    error: error,
   }
 }
 export default usePopulationCompositionList

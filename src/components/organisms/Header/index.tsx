@@ -10,7 +10,7 @@ const Header: FC = () => {
         <link rel='icon' href='/favicon.ico' />
       </Head>
       <div data-e2e='header-area'>
-        <h1>title</h1>
+        <h1>resas 見られる ぺージ</h1>
       </div>
     </div>
   )
