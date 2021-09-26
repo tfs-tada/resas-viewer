@@ -10,8 +10,10 @@
     "lint:fix": "next lint --fix",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
+    "e2e:front": "cp .env.test.example .env && next build && next start",
+    "e2e:back": "cd cypress && docker-compose up -d && cd .. && cypress run",
     "format": "prettier --ignore-path .gitignore --write ./**/*.{js,jsx,ts,tsx,json,css,scss} ",
-    "deploy": "next build && next export"
+    "deploy": "cp .env.example .env && next build && next export"
   },
   "dependencies": {
     "axios": "^0.21.4",

@@ -7,3 +7,10 @@
 cp .env.local.example .env.local
 echo "NEXT_PUBLIC_RESAS_API_KEY={your_api_key}" > .env.local
 ```
+
+## テスト
+* cypressディレクトリ内のdockerコンテナを立てていることを前提に
+```bash
+npm run e2e:front
+npm run e2e:back
+```
